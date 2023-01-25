@@ -1,5 +1,5 @@
 ---
-title: "index"
+title: "Kylie's Comp Bio Page"
 author: "Kylie Finnegan"
 date: "2023-01-25"
 output: html_document
