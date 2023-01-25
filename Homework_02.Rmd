@@ -2,7 +2,9 @@
 title: "Homework #2"
 author: "Kylie Finnegan"
 date: "2023-01-25"
-output: html_document
+output: 
+  html_document: 
+    theme: readable
 ---
 
 ```{r setup, include=FALSE}
