@@ -14,3 +14,6 @@ knitr::opts_chunk$set(echo = TRUE)
 This is my webpage for uploading comp bio assignments.
 
 [Homework #2](https://kylie-finnegan.github.io/FinneganBio381/Homework_02.html)
+
+[Homework #3](https://kylie.finnegan.github.io/FinneganBio381/Homework_03.html)
+

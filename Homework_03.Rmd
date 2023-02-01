@@ -1,0 +1,32 @@
+---
+title: "Homework #3"
+author: "Kylie Finnegan"
+date: "2023-02-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Question #1:
+Find `\s{2,}` (two or more spaces) and replace with `,` to get commas between number/character values but not between the lines (there are no spaces at the ends of the lines and there is only one line break between lines) or between words that are single spaced (like "First String").
+
+Question #2:
+Find `(\w*\s*), (\w*\s*), (.*)` to define the words between commas as objects 1 and 2 and define "all the rest" as object 3. Replace with `\2 \1 \(\3\)` to rearrange the order of the objects (words), get rid of commas, and put object 3 (all the rest = school names) between parentheses.
+
+Question #3: 
+Find `(\d{4,})` to define the four-number codes as object 1, then replace with `\n\1` to add a line break before each incidence of object 1 (four-number code).
+
+Question #4:
+Find `(\d{4,}) ((\w*\s*)*)` to define the four-number code as object 1 and the entire name of the song as object 2. Replace with `\2_\1` to rearrange the objects and add an underscore between them.
+
+Question #5:
+Find `(\w)\w+,(\w+),(\d*.\d*),(\d*)` to define object 1 (first letter only of first word), object 2 (entire second word), object 3 (first number, including decimal) and object 4 (second number). Replace with `\1_\2,\4` to rearrange the object order and add an underscore and a comma between the objects.
+
+Question #6:
+Find `(\w)\w+,(\w{4})\w+,(\d*.\d*),(\d*)` to define object 1 (first letter only of first word), object 2 (first four letters only of second word), object 3 (first number, including decimal) and object 4 (second number). Replace with `\1_\2,\4` to rearrange the object order and add an underscore and a comma between the objects.
+
+Question #7:
+Find `(\w{3})\w+,(\w{3})\w+,(\d*.\d*),(\d*)` to define object 1 (first 3 letters of first word), object 2 (first 3 letters of second word), object 3 (first number, including decimal) and object 4 (second number). Replace with `\1\2, \4, \3` to rearrange object order and add commas and spaces.
+
