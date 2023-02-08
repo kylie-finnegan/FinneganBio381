@@ -17,3 +17,4 @@ This is my webpage for uploading comp bio assignments.
 
 [Homework #3](https://kylie-finnegan.github.io/FinneganBio381/Homework_03.html)
 
+[Homework #4](https://kylie-finnegan.github.io/FinneganBio381/Homework_04.html)

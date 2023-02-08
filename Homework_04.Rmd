@@ -1,0 +1,89 @@
+---
+title: "Homework #4"
+author: "Kylie Finnegan"
+date: "2023-02-08"
+output: html_document
+---
+
+Question #1:
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# assigning values to variables x, a, and b
+x <- 1.1
+a <- 2.2
+b <- 3.3
+
+# a. using variables in an equation
+z <- x^a^b
+print(z)
+# b. using variables in a different equation
+z <- (x^a)^b
+print(z)
+# c. using variables in another equation
+z <- 3*x^3 + 2*x^2 + 1
+print(z)
+
+```
+Question #2:
+```{r}
+# a. creating a vector that contains both the sequences 1-8 in ascending order and 7-1 in descending order
+vector_a <- c(seq(1,8), seq(7,1))
+print(vector_a)
+# b. creating a vector that contains the sequence 1-5 inascending order, with each value repeated 1-5 times, the first seq() represents the numbers we want in our sequence, while the second seq() informs the rep() command how many times to repeat each value in the sequence
+vector_b <- rep(seq(1,5), seq(1,5))
+print(vector_b)
+# c.creating a vector that contains the sequence 5-1 in descending order, with each value repeated 1-5 times, the first seq() represents the numbers we want in our sequence, while the second seq() informs the rep() command how many times to repeat each value in the sequence
+vector_c <- rep(seq(5,1), seq(1,5))
+print(vector_c)
+```
+Question #3:
+```{r}
+# use the runif() function to generate two random uniform values and assign them to the vector "random"
+random <- runif(2)
+# use the atan() function to find the arc tangent of the two values from the "random" vector and assign it to the object "angle"
+angle <- atan(random[2]/random[1])
+# use basic mathematical functions to calculate the hypotenuse^2 using the pythagorean theorem and assign it to the object "rsquared"
+rsquared <- random[1]^2 + random[2]^2
+# use the sqrt() function to find the square root of the object "resquared" and assign it to the object "r"
+r <- sqrt(rsquared)
+# create a vector of the polar coordinates and assign them to the vector "polarcoords"
+polarcoords <- c(r, angle)
+print(polarcoords)
+```
+Question #4:
+```{r}
+# create vector "queue"
+queue <- c("sheep", "fox", "owl", "ant")
+print(queue)
+# add "serpent" to the end of the old queue and update it
+queue <- c(queue, "serpent")
+print(queue)
+# only keep the 2nd-5th objects of the old queue and update it
+queue <- c(queue[2:5])
+print(queue)
+# add "donkey" to the beginning of the old queue and update it
+queue <- c("donkey", queue)
+print(queue)
+# only keep the 1st-4th objects of the old queue and update it
+queue <- c(queue[1:4])
+print(queue)
+# only keep the 1st-2nd objects and the 4th object of the old queue and update it
+queue <- c(queue[1:2],queue[4])
+print(queue)
+# add the object "aphid" between the 2nd and 3rd objects of the old queue and update it
+queue <- c(queue[1:2],"aphid",queue[3])
+print(queue)
+# ask which number in the queue the object "aphid" is
+which(queue == "aphid")
+
+```
+Question #5:
+```{r}
+# create a vector of integers from 1 to 100
+values <- (1:100)
+# filter out values that do not evenly (residual not equal to zero) divide by 2, 3, or 4 and put their positions from the original vector "values" into a new vector, "notvalues"
+notvalues <- which(values%%2 == !0 & values%%3 == !0 & values%%7 == !0)
+print(notvalues)
+
+```
+
