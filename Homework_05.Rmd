@@ -1,0 +1,94 @@
+---
+title: 'Homework #5'
+author: "Kylie Finnegan"
+date: "2023-02-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1:
+```{r}
+n_dims <- sample(3:10, size = 1)
+vector <- 1:(n_dims^2)
+
+# saving the rearranged vector
+vector <- sample(vector)
+
+# creating a matrix from the vector, in order for the matrix to be square, need to set row/column number to whatever "n_dims" is, because out total number of elements is the "n_dims" squared
+matrix <- matrix(data = vector, nrow = n_dims)
+
+# transpose the matrix
+transposed <- t(matrix)
+
+# print the matrix, notice that it has essentially been divided diagonally, with all of the values on either side of the diagonal being flipped across that axis
+print(transposed)
+
+# calculate the sum and mean of first row - designate by subsetting matrix
+sum(matrix[1,])
+mean(matrix[1,])
+
+# calculate the sum and mean of last row - designate by subsetting matrix
+sum(matrix[(n_dims),])
+mean(matrix[(n_dims),])
+
+# using the eigen() function on matrix to compute the eigenvectors of the matricx without having to do it by hand
+eigen(matrix)
+
+# $values gives you all of the calculated eigenvalues from your matrix, which is lambda (the determinant) that describes properties of your matrix
+typeof(eigen(matrix)$values)
+
+# $vectors gives you a matrix of eigenvectors made out of the eigenvalues calculated for each dimension of your matrix
+typeof(eigen(matrix)$vectors)
+
+```
+# Question 2:
+```{r}
+# create the objects to be contained in list
+my_matrix <- matrix(data = runif(16), nrow = 4)
+my_logical <- (runif(100))>0.5
+my_letters <- sample(x=letters, size=26)
+
+# create the list
+my_list <- list(my_matrix, my_logical, my_letters)
+
+# create the new list by select which object in the list, subset to specify which element within the selected object
+new_list <- list((my_list[[1]][2,2]), (my_list[[2]][2]), (my_list[[3]][2]))
+
+# check that each element in the list is its own data type (not just also a list)
+typeof(new_list[[1]])
+typeof(new_list[[2]])
+typeof(new_list[[3]])
+
+# make an atomic vector out of the new list
+new_vector <- c(new_list[[1]], new_list[[2]], new_list[[3]])
+# data types are coerced into character for this vector
+typeof(new_vector)
+
+```
+# Question 3:
+```{r}
+# create the variables for data frame
+my_unis <- runif(26, min = 0, max = 10)
+my_letters <- sample(LETTERS, 26)
+
+# create data frame
+my_dataframe <- data.frame(my_unis, my_letters)
+print(my_dataframe)
+
+# select 4 random rows (from the numbers column) and replace them with NA
+my_dataframe[sample(1:26, 4),1] <- NA
+
+# identify which positions (row numbers) contain NAs
+which(is.na(my_dataframe$my_unis))
+
+# reorder the entire data frame so the letter column is in alphabetical order
+my_dataframe[order(my_dataframe$my_letters),]
+
+# calculaing the mean for numbers (column 1)
+mean(my_dataframe$my_unis, na.rm = TRUE)
+
+```
+
