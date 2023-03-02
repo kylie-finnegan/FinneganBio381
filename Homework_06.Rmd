@@ -1,0 +1,94 @@
+---
+title: 'Homework #6'
+author: "Kylie Finnegan"
+date: "2023-03-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+setwd("~/Comp Bio/FinneganBio381")
+```
+
+
+
+## Question 1:
+```{r}
+str(iris)
+```
+
+##### The iris dataset contains 150 observations of 5 variables.
+
+## Question 2:
+```{r}
+iris1 <- filter(iris,
+                Species==c("virginica","versicolor"),
+                Sepal.Length > 6.0, Sepal.Width > 2.5)
+```
+
+##### The new iris1 dataset contains 28 observations of 5 variables.
+
+## Question 3:
+```{r}
+iris2 <- select(iris1, Species, Sepal.Width, Sepal.Length)
+```
+
+##### The new iris2 dataset contains 28 observations of 3 variables.
+
+## Question 4:
+```{r}
+iris3 <- arrange(iris2, desc(Sepal.Length))
+head(iris3)
+```
+
+## Question 5:
+```{r}
+iris4 <- mutate(iris3, Sepal.Area=Sepal.Length*Sepal.Width)
+```
+
+##### The new iris4 dataset has 28 observations of 4 variables.
+
+## Question 6:
+```{r}
+iris5 <- summarize(iris4, Avg.Sep.Length=mean(Sepal.Length),
+                Avg.Sep.Width=mean(Sepal.Width),
+                Sample.N=n())
+print(iris5)
+```
+
+## Question 7: 
+```{r}
+
+iris6 <- group_by(iris4, Species) %>% 
+  summarise(Avg.Sep.Lenght=mean(Sepal.Length),
+            Avg.Sep.Width=mean(Sepal.Width),
+            Sample.N=n())
+print(iris6)
+```
+
+## Question 8:
+```{r}
+irisFinal <- iris %>% 
+  filter(Species==c("virginica","versicolor"),
+         Sepal.Length > 6.0, Sepal.Width > 2.5) %>% 
+  select(Species, Sepal.Width, Sepal.Length) %>% 
+  arrange(desc(Sepal.Length)) %>% 
+  mutate(Sepal.Area=Sepal.Length*Sepal.Width) %>% 
+  group_by(Species) %>% 
+  summarise(Avg.Sep.Lenght=mean(Sepal.Length),
+            Avg.Sep.Width=mean(Sepal.Width),
+            Sample.N=n())
+print(irisFinal)
+```
+
+## Question 9:
+```{r}
+iris_longer <- iris %>% 
+  pivot_longer(cols=c(Sepal.Length:Sepal.Width,
+                        Petal.Length:Petal.Width),
+               names_to = "Measure",
+               values_to = "Value")
+head(iris_longer)
+```
+
