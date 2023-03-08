@@ -1,0 +1,295 @@
+---
+title: 'Homework #7'
+author: "Kylie Finnegan"
+date: "2023-03-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+library(MASS)
+setwd("~/Comp Bio/FinneganBio381")
+```
+# Simulating and fitting data distributions
+
+## Read in data vector: generate some fake data
+```{r}
+# quick and dirty, a truncated normal distribution to work on the solution set
+
+z <- rnorm(n=3000, mean=0.2)
+z <- data.frame(1:3000, z)
+names(z) <- list("ID", "myVar")
+z <- z[z$myVar > 0,]
+str(z)
+summary(z$myVar)
+```
+
+## Plot histogram of data
+
+```{r} 
+
+p1 <- ggplot(data=z, aes(x=myVar, y=..density..)) +
+  geom_histogram(color="grey60", fill="cornsilk", 
+                 linewidth=0.2)
+print(p1)
+```
+
+## Add empirical density curve
+
+```{r}
+
+p1 <- p1 + geom_density(linetype="dotted", size=0.75)
+print(p1)
+```
+
+## Get maximum likelihood parameters for normal
+
+```{r}
+
+normPars <- fitdistr(z$myVar, "normal")
+print(normPars)
+str(normPars)
+normPars$estimate["mean"]
+```
+
+## Plot normal probability density
+
+```{r}
+
+meanML <- normPars$estimate["mean"]
+sdML <- normPars$estimate["sd"]
+xval <- seq(0,max(z$myVar), len=length(z$myVar))
+stat <- stat_function(aes(x=xval, y=..y..), fun=dnorm,
+                      color="red", n=length(z$myVar), 
+                      args=list(mean=meanML, sd=sdML))
+p1 + stat
+```
+
+## Plot exponential probability density
+
+```{r}
+
+expoPars <- fitdistr(z$myVar, "exponential")
+rateML <- expoPars$estimate["rate"]
+stat2 <- stat_function(aes(x=xval, y=..y..), fun=dexp,
+                       color="blue", n=length(z$myVar),
+                       args=list(rate=rateML))
+p1 + stat + stat2
+```
+
+## Plot uniform probability density
+
+```{r}
+
+stat3 <- stat_function(aes(x=xval, y=..y..), fun=dunif,
+                       color="darkgreen",n=length(z$myVar),
+                       args=list(min=min(z$myVar),
+                                 max=max(z$myVar)))
+p1 + stat + stat2 + stat3
+```
+
+## Plot gamma probability density
+
+```{r}
+
+gammaPars <- fitdistr(z$myVar, "gamma")
+shapeML <- gammaPars$estimate["shape"]
+rateML <- gammaPars$estimate["rate"]
+stat4 <- stat_function(aes(x=xval, y=..y..), fun=dgamma,
+                       color="brown", n=length(z$myVar),
+                       args=list(shape=shapeML,
+                                 rate=rateML))
+p1 + stat + stat2 + stat3 + stat4
+```
+
+## Plot beta probability density
+
+```{r}
+
+pSpecial <- ggplot(data=z, aes(x=myVar/(max(myVar+0.1)),
+                               y=..density..)) +
+  geom_histogram(color="grey60", fill="cornsilk",
+                 size=0.2) +
+  xlim(c(0,1)) +
+  geom_density(size=0.75, linetype="dotted")
+
+betaPars <- fitdistr(x=z$myVar/max(z$myVar+0.1), 
+                     start=list(shape1=1, shape2=2),
+                     "beta")
+shape1ML <- betaPars$estimate["shape1"]
+shape2ML <- betaPars$estimate["shape2"]
+
+statSpecial <- stat_function(aes(x=xval, y=..y..),
+                             fun=dbeta, color="orchid",
+                             n=length(z$myVar),
+                             args=list(shape1=shape1ML,
+                                       shape2=shape2ML))
+pSpecial + statSpecial
+```
+
+# Inputting my own data
+
+```{r}
+
+z <- read.table("CleanData.csv", header=TRUE, sep=",")
+str(z)
+summary(z)
+```
+
+## Plot histogram of data
+
+```{r} 
+
+p1 <- ggplot(data=z, aes(x=Intensity, y=..density..)) +
+  geom_histogram(color="grey60", fill="cornsilk", 
+                 linewidth=0.2)
+print(p1)
+```
+
+## Add empirical density curve
+
+```{r}
+
+p1 <- p1 + geom_density(linetype="dotted", size=0.75)
+print(p1)
+```
+
+## Get maximum likelihood parameters for normal
+
+```{r}
+
+normPars <- fitdistr(z$Intensity, "normal")
+print(normPars)
+str(normPars)
+normPars$estimate["mean"]
+```
+
+## Plot normal probability density
+
+```{r}
+
+meanML <- normPars$estimate["mean"]
+sdML <- normPars$estimate["sd"]
+xval <- seq(0,max(z$Intensity),
+            len=length(z$Intensity))
+stat <- stat_function(aes(x=xval, y=..y..), fun=dnorm,
+                      color="red",
+                      n=length(z$Intensity), 
+                      args=list(mean=meanML, sd=sdML))
+p1 + stat
+```
+
+## Plot exponential probability density
+
+```{r}
+
+expoPars <- fitdistr(z$Intensity, "exponential")
+rateML <- expoPars$estimate["rate"]
+stat2 <- stat_function(aes(x=xval, y=..y..), fun=dexp,
+                       color="blue",
+                       n=length(z$Intensity),
+                       args=list(rate=rateML))
+p1 + stat + stat2
+```
+
+## Plot uniform probability density
+
+```{r}
+
+stat3 <- stat_function(aes(x=xval, y=..y..), fun=dunif,
+                    color="darkgreen",
+                    n=length(z$Intensity),
+                       args=list(min=min(z$Intensity),
+                                 max=max(z$Intensity)))
+p1 + stat + stat2 + stat3
+```
+
+## Plot gamma probability density
+
+```{r}
+gammaPars <- fitdistr(z$Intensity, "gamma", 
+                      start=list(shape = 1, rate =1),
+                      lower=1)
+shapeML <- gammaPars$estimate["shape"]
+rateML <- gammaPars$estimate["rate"]
+stat4 <- stat_function(aes(x=xval, y=..y..), fun=dgamma,
+                       color="brown", n=length(z$Intensity),
+                       args=list(shape=shapeML,
+                                 rate=rateML))
+p1 + stat + stat2 + stat3 + stat4
+```
+
+## Plot beta probability density
+
+```{r}
+
+pSpecial <- ggplot(data=z, aes(x=Intensity/(max(Intensity+0.1)),
+                               y=..density..)) +
+  geom_histogram(color="grey60", fill="cornsilk", size=0.2) +
+  xlim(c(0,1)) +
+  geom_density(size=0.75, linetype="dotted")
+
+betaPars <- fitdistr(x=z$Intensity/max(z$Intensity+0.1), 
+                     start=list(shape1=1, shape2=2),
+                     "beta")
+
+shape1ML <- betaPars$estimate["shape1"]
+shape2ML <- betaPars$estimate["shape2"]
+
+statSpecial <- stat_function(aes(x=xval, y=..y..),
+                             fun=dbeta, color="orchid",
+                             n=length(z$Intensity),
+                             args=list(shape1=shape1ML,
+                                       shape2=shape2ML))
+pSpecial + statSpecial
+```
+
+# The normal probabilty density best models my data. 
+## Using the normal likelihood parameters calculated above, I will generate a new dataset that also follows this pattern.
+
+```{r}
+fitdistr(z$Intensity,"normal")
+# mean = 65281, sd = 20297
+mean(z$Intensity) # real mean = 65281
+sd(z$Intensity) # real sd = 20507
+
+# generate the new data based on old parameters
+NewData <- rnorm(n=49, mean=65281, sd=20297)
+NewData <- data.frame(1:49, NewData)
+names(NewData) <- list("ID", "Intensity")
+str(NewData)
+summary(NewData$Intensity)
+
+# plot the new data in a histogram
+NormPlot <- ggplot(data=NewData, aes(x=Intensity, y=..density..)) +
+  geom_histogram(color="grey60", fill="cornsilk", 
+                 linewidth=0.2)
+print(NormPlot)
+
+# add the empirical density of the new data
+NormPlot <- NormPlot + geom_density(linetype="dotted", size=0.75)
+print(NormPlot)
+
+# generate maximum likelihood parameters for new data
+NewPars <- fitdistr(NewData$Intensity, "normal")
+print(normPars)
+str(normPars)
+NewPars$estimate["mean"]
+
+# plot normal probability density for new data
+NewMean <- NewPars$estimate["mean"]
+NewSD <- NewPars$estimate["sd"]
+NewXval <- seq(0,max(NewData$Intensity),
+            len=length(NewData$Intensity))
+NewStat <- stat_function(aes(x=NewXval, y=..y..), fun=dnorm,
+                      color="red",
+                      n=length(NewData$Intensity), 
+                      args=list(mean=NewMean, sd=NewSD))
+NormPlot + NewStat
+```
+
+## The two histograms look very similar, but my real dataset has more variation than the simulated dataset. The probability density is higher in the simulated dataset for values around the mean. There are also fewer outliers and gaps in the simulated dataset than in my real dataset. I think the simulated dataset's histogram is doing a good job representing the probability distribution of my real data, but the standard deviation calculated by the normal probability distribution (20297) was lower than the actual calculated value (20507) and since the simulated dataset was created based on the probability values and not the real calculated values, this could explain the lack of variation seen in my simulated histogram as compared to the higher variation seen in my real data histogram. If I were to alter the parameters of the simulated dataset, I would use the real calculated standard deviation instead of that of the model to try to make the simulated dataset more realistic.
