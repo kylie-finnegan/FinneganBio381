@@ -1,0 +1,42 @@
+---
+title: 'Homework #9'
+author: "Kylie Finnegan"
+date: "2023-03-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Header #############################
+# Kylie Finnegan, 3/29/23
+
+# Initialization ####################
+library(tidyverse)
+library(MASS)
+
+# Functions ########################
+source("Functions.R")
+
+# Global Variables #####################
+Ub_data = "CleanData.csv"
+
+# Program Body #########################
+sort_data(file_name = Ub_data) 
+find_stats(control_vector = ControlData$Intensity, 
+           treatment_vector = TreatmentData$Intensity)
+run_anova(x_var=df$Treatment, y_var=df$Intensity)
+new_data(data = df)
+run_anova(NewData$Treatment, NewData$Intensity)
+plot_hist(NewData, NewData$Treatment, NewData$Intensity)
+plot_box(NewData, NewData$Treatment, NewData$Intensity)
+```
+
+```{r}
+sort_data2(file_name = Ub_data)
+find_stats(Data$Intensity, Data$LT50)
+linmod(Data$LT50, Data$Intensity)
+```
+
