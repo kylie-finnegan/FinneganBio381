@@ -1,0 +1,122 @@
+---
+title: 'Homework #10'
+author: "Kylie Finnegan"
+date: "2023-04-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Question 1:
+```{r}
+# create counter and vector
+counter <- 0
+my_vector <- c(0,3,6,25,0,3,7,0,0,12,8,5)
+
+# create for loop
+for (i in 1:length(my_vector)) {
+  if (my_vector[i] == 0) {
+    counter <- counter + 1 }
+}
+
+print(counter)
+```
+
+# Quesion 2:
+```{r}
+zeros <- sum(my_vector == 0)
+print(zeros)
+```
+
+#Question 3:
+```{r}
+##############################
+# FUNCTION: build_matrix
+# packages: none
+# purpose: build a matrix from two integers
+# input: two integers
+# output: a matrix
+#-------------------- 
+build_matrix <- function(x=2, y=3) {
+  my_matrix <- matrix(nrow = x, ncol = y)
+  for (i in 1:nrow(my_matrix)) {
+  for (j in 1:ncol(my_matrix)) {
+    my_matrix[i,j] <- (i*j)
+  }
+  }
+  return(my_matrix)
+}
+
+# test function (default inputs)
+build_matrix()
+# test function (other inputs)
+build_matrix(x=4,y=5)
+```
+
+# Question 4:
+```{r}
+# create a dataset
+groups <- c(rep("Control",4),rep("Treatment1",4),
+            rep("Treatment2",4))
+
+y_var <- c(runif(4) + 1, runif(4) + 10, runif(4) + 26)
+
+df <- data.frame(treatment=groups, y_var=y_var) 
+
+# find means of original dataset for each group
+
+control_mean <- mean(df[1:4,2])
+
+group1_mean <- mean(df[5:8,2])
+
+group2_mean <- mean(df[9:12,2])
+
+means <- c(control_mean, group1_mean, group2_mean)
+
+##############################
+# FUNCTION: randomize_fun
+# packages: none
+# purpose: reshuffle and recalculate response variable
+# input: dataframe with three groups and their response vars
+# output: new dataframe with three group and vars
+#-------------------- 
+randomize_fun <- function(data=NULL) {
+  new_df <- (data[,2] <- sample(data[,2]))
+  new_c_mean <- mean(new_df[1:4])
+  new_1_mean <- mean(new_df[5:8])
+  new_2_mean <- mean(new_df[9:12])
+  new_means <- c(new_c_mean, new_1_mean, new_2_mean)
+  return(new_means)
+}
+
+
+# create empty grid to fill in
+new_df <- expand.grid(replicate=1:100,
+                        control=NA,
+                        group_1=NA,
+                        group_2=NA)
+
+# for loop - repeat function 100x
+for (i in 1:100) {
+  new_means <- randomize_fun(data = df)
+  new_df[i,2] <- new_means[1]
+  new_df[i,3] <- new_means[2]
+  new_df[i,4] <- new_means[3]
+}
+
+print(new_df)
+
+# plot new mean distributions of each group
+qplot(data = new_df, x = new_df$control)
+qplot(data = new_df, x = new_df$group_1)
+qplot(data = new_df, x = new_df$group_2)
+
+# compare to original means of each group
+print(means)
+
+```
+
+### The distributions of the new group means differ vastly from the original means, except in treatment group 1. Due to the values contained in each group originally, when randomly shuffled, all group means became more similar to each other and closer to the intermediate mean value, which originally belonged to treatment group 1. There is also a large range of means along the distribution for each group, because the randomization x100 produced a wide variety of group combinations. 
