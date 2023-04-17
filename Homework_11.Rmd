@@ -1,0 +1,79 @@
+---
+title: 'Homework #11'
+author: "Kylie Finnegan"
+date: "2023-04-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+Batch processing of "Seasonal variation in life history traits in two Drosophila species" data from Behrman et al., 2015 on Dryad. 
+
+```{r}
+# load packages
+library(tidyverse)
+
+# source functions
+source("FileBuilder_fun.R")
+source("RegStats_fun.R")
+
+# global variables
+file_folder <- "doi_10.5061_dryad.2j48p__v1/"
+file_out <- "StatsSummary.csv"
+
+#--------------------------------------------
+
+file_names <- list.files(path=file_folder,
+                         pattern = "*.csv")
+
+# create data frame to hold file summary statistics
+ID <- seq_along(file_names)
+file_name <- file_names
+slope <- rep(NA,length(file_names))
+p_val <- rep(NA,length(file_names))
+r2 <- rep(NA,length(file_names))
+
+stats_out <- data.frame(ID,file_name,slope,p_val,r2)
+
+# batch process by looping through individual files
+for (i in seq_along(file_names)) {
+  data <- read.table(file=paste(file_folder,file_names[i],sep=""),
+                     sep=",",
+                     header=TRUE)
+  
+  d_clean <- data[complete.cases(data),] 
+  
+  . <- reg_stats(d_clean) 
+  stats_out[i,3:5] <- unlist(.) 
+  
+}
+
+# write output to a csv file 
+# empty table with metadata at top
+write.table(cat("# Summary stats for ",
+                "batch processing of regression models","\n",
+                "# timestamp: ",as.character(Sys.time()),"\n",
+                "# KMF","\n",
+                "# ------------------------", "\n",
+                "\n",
+                file=file_out,
+                row.names="",
+                col.names="",
+                sep=""))
+
+# add the data frame to empty table file
+write.table(x=stats_out,
+            file=file_out,                  
+            sep=",")
+
+
+# final output file
+summary_file <- read.csv("StatsSummary.csv")
+print(summary_file)
+
+```
+
