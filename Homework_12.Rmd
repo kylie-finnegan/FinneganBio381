@@ -1,0 +1,80 @@
+---
+title: 'Homework #12'
+author: "Kylie Finnegan"
+date: "2023-04-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+# load packages
+library(tidyverse)
+library(patchwork)
+
+# read in data - introgression
+CH_int <- read.csv("SUM_alleles_Gprime_CH_deltaSNP.csv")
+SK_int <- read.csv("SUM_alleles_Gprime_SK_deltaSNP.csv")
+
+# plot Gprime distributions
+Gprime_CHplot <- ggplot(data = CH_int, mapping = aes(x=Gprime)) +
+  geom_histogram(color="darkgrey", fill="pink") +
+  labs(title = "G' value distribution for Chiapas-VT10 cross SNPs",
+       x="G' value",
+       y="Counts") +
+  xlim(c(0,200)) +
+  ylim(c(0,50000))
+
+Gprime_SKplot <- ggplot(data = SK_int, mapping = aes(x=Gprime)) +
+  geom_histogram(color="darkgrey", fill="lightblue") +
+  labs(title="G' value distribution for St. Kitt's-VT8 cross SNPs",
+       x="G' value",
+       y="Counts") +
+  ylim(c(0,50000))
+
+Gprime_both <- Gprime_CHplot / Gprime_SKplot
+print(Gprime_both)
+
+# plot SNP positions by chromosome
+SNPs_CH <- ggplot(data = CH_int, mapping = aes(x=CHROM)) +
+  geom_bar(color="darkgrey", fill="pink") +
+  labs(title = "SNP positions (CH-VT10)",
+       x="Chromosome arm",
+       y="Number of observed SNPs") +
+  ylim(c(0,130000))
+
+SNPs_SK <- ggplot(data = SK_int, mapping = aes(x=CHROM)) +
+  geom_bar(color="darkgrey", fill="lightblue") +
+  labs(title = "SNP positions (SK-VT8)",
+       x="Chromosome arm",
+       y="Number of observed SNPs") +
+  ylim(c(0,130000))
+
+SNPs_both <- SNPs_CH + SNPs_SK
+print(SNPs_both)
+
+```
+
+```{r}
+# read in data - ubiquitin
+Ub_data <- read.csv("CleanData_12.csv")
+
+# plot fluorescence intensity
+Ub_box <- ggplot(data = Ub_data, 
+                 mapping = aes(x=Region,y=Intensity, fill=Treatment)) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("blue","red"))
+print(Ub_box)
+
+# plot intensity and latitude relationship
+Ub_plot <- ggplot(data = Ub_data, mapping = aes(x=LT50,y=Intensity,
+                                     color=Treatment)) +
+  geom_point() +
+  labs(title = "LT50 impact on ubiquitin expression") +
+  scale_color_manual(values = c("blue", "red"))
+print(Ub_plot)
+```
+
